@@ -37,7 +37,10 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Activation</th>
+                                <?php if ($userInfo['role'] == 'admin'){?>
                                 <th>Action</th>
+                                <?php }?>
                             </tr>
                             </thead>
                             <tbody id="showData">
@@ -53,9 +56,14 @@
                                     <?php if ($all_user['active'] == 0){?>
                                     <td>
 										<a href="<?= base_url('active-user/').$all_user['id']?>" class="btn btn-primary">Active</a>
-										<a href="<?= base_url('active-user/').$all_user['id']?>" class="btn btn-primary">Edit</a>
-										<a href="<?= base_url('active-user/').$all_user['id']?>" class="btn btn-primary">Delete</a>
-									</td>
+										</td>
+                                    <?php }?>
+                                    <?php if ($userInfo['role'] == 'admin'){?>
+                                    <td>
+                                        <a href="<?= base_url('edit-user/').$all_user['id']?>" class="btn btn-primary">Edit</a>
+                                        <a href="#" userId="<?php echo $all_user['id']?>" class="btn btn-primary delete-user">Delete</a>
+
+                                    </td>
                                     <?php }?>
                                 </tr>
                             <?php }?>
@@ -63,6 +71,25 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div id="deleteModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure delete this user?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" userid="" class="btn btn-default yseBtn" data-dismiss="modal">Yes</button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -73,6 +100,26 @@
         format: "dd/mm/yyyy",
         autoclose: true,
         todayHighlight: true
+    });
+</script>
+<script>
+    $(".delete-user").click(function () {
+
+        $('#deleteModal').modal("show");
+        var userId = $(this).attr('userId');
+        $('.yseBtn').attr('userid',userId);
+    });
+    $(".yseBtn").click(function () {
+        var userId = $(this).attr('userid');
+        $.ajax({
+            type: "POST",
+            url: 'delete-user',
+            data: {userId:userId},
+            success: function(response) {
+                $('#deleteModal').modal("hide");
+                document.location.reload(true);
+            }
+        });
     });
 </script>
 <script type="text/javascript" src="<?= base_url('assets/js/plugins/jquery.dataTables.min.js')?>"></script>

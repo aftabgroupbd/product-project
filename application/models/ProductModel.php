@@ -78,7 +78,11 @@ class ProductModel extends CI_Model
         $query = $this->db->get();
         return $query->row();
     }
-
+    public function delete($table,$condition)
+    {
+        $this->db->where($condition);
+        $this->db->delete($table);
+    }
  public function get_products($limit, $offset, $search, $count)
     {
 		 

@@ -481,6 +481,62 @@ class DashboardController extends CI_Controller {
         $data['content']=$this->load->view('front-end/manage-users', $data, true);
         $this->load->view('front-end/master', $data);
     }
+    public function edit_user($id)
+    {
+        $data = array();
+        $condition =['id' => $id];
+        $data['user'] = $this->ProductModel->GetRow('users',$condition);
+        $data['userInfo'] = $this->UserCommon();
+        $data['page_title'] = $data['user']->first_name.' '.$data['user']->last_name;
+        $data['content']=$this->load->view('front-end/edit-users', $data, true);
+        $this->load->view('front-end/master', $data);
+    }
+    public function delete_user()
+    {
+        $user_id         = $this->input->post('userId', TRUE);
+        $condition =['id' => $user_id];
+        $this->ProductModel->delete('users',$condition);
+
+        echo 'success';
+    }
+    public function update_user()
+    {
+        $user_id         = $this->input->post('user_id', TRUE);
+        $this->form_validation->set_rules('first_name','first name','required');
+        $this->form_validation->set_rules('last_name','last name','required');
+        $this->form_validation->set_rules('email','email','required');
+        $this->form_validation->set_rules('phone','phone','required');
+        $this->form_validation->set_rules('username','username','required');
+        $this->form_validation->set_rules('user_role','user role','required');
+        $this->form_validation->set_error_delimiters('<div class="text-danger">','</div>');
+        if ($this->form_validation->run()) {
+            $user_data['first_name']       = $this->input->post('first_name', TRUE);
+            $user_data['last_name']        = $this->input->post('last_name', TRUE);
+            $user_data['phone']            = $this->input->post('phone', TRUE);
+            $user_data['role']              = $this->input->post('user_role', TRUE);
+
+
+            $condition =['id' => $user_id];
+            $result = $this->ProductModel->updateData('users',$condition,$user_data);
+            if (!empty($result)) {
+                $this->session->set_flashdata('success_message','Successfully updated user');
+                return redirect('edit-user/'.$user_id);
+            } else {
+
+                $this->session->set_flashdata('success_message','User update Failed');
+                return redirect('edit-user/'.$user_id);
+            }
+        }else{
+
+            $data = array();
+            $condition =['id' => $user_id];
+            $data['user'] = $this->ProductModel->GetRow('users',$condition);
+            $data['userInfo'] = $this->UserCommon();
+            $data['page_title'] = $data['user']->first_name.' '.$data['user']->last_name;
+            $data['content']=$this->load->view('front-end/edit-users', $data, true);
+            $this->load->view('front-end/master', $data);
+        }
+    }
     public function add_user()
     {
 
