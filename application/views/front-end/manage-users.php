@@ -51,7 +51,11 @@
                                         <td><a href="<?= base_url('deactivate-user/').$all_user['id']?>" class="btn btn-primary">Deactivate</a></td>
                                     <?php }?>
                                     <?php if ($all_user['active'] == 0){?>
-                                    <td><a href="<?= base_url('active-user/').$all_user['id']?>" class="btn btn-primary">Active</a></td>
+                                    <td>
+										<a href="<?= base_url('active-user/').$all_user['id']?>" class="btn btn-primary">Active</a>
+										<a href="<?= base_url('active-user/').$all_user['id']?>" class="btn btn-primary">Edit</a>
+										<a href="<?= base_url('active-user/').$all_user['id']?>" class="btn btn-primary">Delete</a>
+									</td>
                                     <?php }?>
                                 </tr>
                             <?php }?>
